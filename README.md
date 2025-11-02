@@ -1,4 +1,6 @@
 # Perimeter-Breach-Gaining-Internal-Access-Through-SSH-Relay-Attacks
+From edge to internal network in one move, this red team exercise shows how sshuttle can turn compromised credentials into full internal network access. We successfully pivoted to enumerate Windows Server 2016 systems; a stark reminder to enforce MFA, restrict SSH access, and monitor for lateral movement.
+
 ### Executive summary
 
 This lab confirmed that an external attacker with compromised SSH credentials could pivot through the edge router to access an internal `10.1.16.0/24` subnet. Using `sshuttle`, TCP traffic was successfully relayed to internal hosts, enabling service discovery and host enumeration. The MS server at `10.1.16.2` was confirmed reachable over TCP and identified as Windows Server 2016 via SMB enumeration. The risk is assessed as **Medium-High**: with credential reuse and insufficient network segmentation, attackers can bypass perimeter filtering to enumerate and potentially exploit internal services.
