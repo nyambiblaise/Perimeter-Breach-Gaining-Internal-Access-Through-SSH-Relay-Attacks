@@ -164,6 +164,24 @@ Performing an nmap scan and sshuttle is capturing it and this confirms that we h
 - **Improves Detection Capability:** Monitoring SSH tunneling and internal scanning accelerates threat containment.
 - **Supports Compliance:** Controls around remote access and internal service exposure align with common security frameworks.
 
+## **Tools Used**
+
+The following tools were utilized during this engagement to conduct reconnaissance, establish persistence, and enumerate internal services:
+
+### **Primary Tools:**
+
+- **Kali Linux** - Penetration testing distribution used as the attacker platform - https://www.kali.org/docs/
+- **Nmap** - Network discovery and service enumeration - https://nmap.org/docs.html
+- **sshuttle** - SSH-based VPN relay for TCP traffic pivoting - https://github.com/sshuttle/sshuttle
+- **sshpass** - SSH password authentication automation
+- **cURL** - HTTP service interaction and validation
+
+### **Supporting Tools:**
+
+- **ifconfig** - Network interface configuration verification
+- **ping** - Basic ICMP connectivity testing
+- **netcat** - TCP connectivity validation
+- **SMB OS Discovery Script** - Nmap script for Windows/SMB fingerprinting - https://nmap.org/nsedoc/scripts/smb-os-discovery.html
 ### Conclusion
 
 This engagement demonstrated that with valid SSH access to the edge router, an attacker can relay TCP traffic to internal systems and enumerate critical services such as SMB on a Windows server. Addressing SSH exposure, enforcing strong authentication, and strengthening segmentation and monitoring will significantly reduce the likelihood and impact of relay-based lateral movement.
