@@ -17,8 +17,9 @@ This lab confirmed that an external attacker with compromised SSH credentials co
     - Denial of service, data exfiltration, privilege escalation on domain controllers.
 - **Credentials:**
     - Previously obtained SSH credentials for the edge router were used. Find exploit here (https://github.com/nyambiblaise/Domain-Controller-DC-Exploitation-with-Metasploit-Impacket)
+<img width="806" height="615" alt="image" src="https://github.com/user-attachments/assets/e7fdf449-fc50-4d68-bedc-e0c341341e95" />
 
-![image.png](attachment:4451a65f-2e54-4a05-b2e5-ffb0c69ec42d:image.png)
+
 
 ### Timeline and actions performed
 
@@ -33,10 +34,9 @@ We identified the Kali PC and scanned the local subnet to discover the edge rout
 1. **Edge Router Service Discovery**
 - Baseline Nmap reconnaissance confirmed the edge router (`203.0.113.1`) was accessible with SSH exposed.
 - Services detected: SSH (22/tcp), SMTP (25/tcp), HTTP (80/tcp).
+<img width="1217" height="398" alt="image" src="https://github.com/user-attachments/assets/97b8bca6-06e5-49a2-9027-d5df108f916b" />
+<img width="1130" height="287" alt="image" src="https://github.com/user-attachments/assets/4c1a5a44-5d7f-4200-8b28-7ecba25bdc5e" />
 
-![image.png](attachment:f8556dbd-93c7-4c9f-b08d-210d785fd100:image.png)
-
-![image.png](attachment:353ce7d7-aeaf-4629-9a79-fe79887d8133:image.png)
 
 As mentioned in the scope, we had previously exploited this server, so we’ll be skipping this part. you can find the exploit here (https://github.com/nyambiblaise/Domain-Controller-DC-Exploitation-with-Metasploit-Impacket)
 
@@ -46,16 +46,17 @@ Our quick scan on the edge router confirms that we can interact with it and that
 
 • Attempted to ping `10.1.16.2` : all packets were blocked, confirming perimeter filtering, ICMP and initial TCP attempts failed.
 
-![image.png](attachment:bc6161f7-e21b-4e99-adf7-8fb7e39b22e5:image.png)
+<img width="1064" height="283" alt="image" src="https://github.com/user-attachments/assets/9ee47f98-261c-4e28-84a9-85492930e10f" />
+
 
 1. **SSH Relay Setup with sshuttle**
 - Used `sshuttle` with valid credentials to establish a TCP relay through the edge router (203.0.113.1) to the internal subnet `10.1.16.0/24`.
 - Relay successfully established, enabling TCP-based communication to internal hosts.
 - Since the ssh server is on a different subnet, we cannot directly access it, to do this, we need to route through a jump host or use another approach since trying to login to the ssh works..
 
-![image.png](attachment:cf662c6e-6aa9-4256-b453-9d45f6ae00fc:image.png)
+<img width="1045" height="145" alt="image" src="https://github.com/user-attachments/assets/90489963-c29a-4cc0-9565-394f477a0b52" />
 
-![image.png](attachment:b71b144e-37e9-449e-9d33-7b4082fa278d:image.png)
+<img width="1538" height="605" alt="image" src="https://github.com/user-attachments/assets/fa8a3e35-542e-4359-9d24-c08295dd3356" />
 
 We can see that the relay is now connected to the edge.
 
@@ -63,15 +64,16 @@ We can see that the relay is now connected to the edge.
 
 • ICMP remained blocked, but TCP-based access (e.g., HTTP) to `10.1.16.2` was successful via `curl`.
 
-![image.png](attachment:bc6161f7-e21b-4e99-adf7-8fb7e39b22e5:image.png)
+<img width="1064" height="283" alt="image" src="https://github.com/user-attachments/assets/2855fa29-76d5-4903-ad46-ad1002770626" />
+
 
 This failure is normal because SSHuttle relays TCP and not ICMP traffic. So for this, we try to access the MS via TCP using the web browser, netcat or curl which effectively confirms that our relay is successful and we are now within the subnet.
 
 `curl http:// 10.1.16.2`
 
-![image.png](attachment:189742a4-cdd7-4119-ac4f-9dfc2e09ff95:image.png)
+<img width="1261" height="299" alt="image" src="https://github.com/user-attachments/assets/a91d7a06-0e3b-4d81-95c4-5621e705f21b" />
+<img width="1252" height="553" alt="image" src="https://github.com/user-attachments/assets/993f43d6-de6e-420a-a9ff-829ba4b32a7d" />
 
-![image.png](attachment:880c8626-f2b4-4468-a85f-dbf12bacf85c:image.png)
 
 1. **Service Enumeration via Relay**
 - Conducted TCP connect scan and SMB OS discovery against `10.1.16.2`.
@@ -82,11 +84,13 @@ This failure is normal because SSHuttle relays TCP and not ICMP traffic. So for 
 
 This confirms that we’ve got our target on site and it is running a Windows Server 2016
 
-![image.png](attachment:68b96da6-13c1-48eb-9b58-8005a9730562:image.png)
+<img width="1213" height="506" alt="image" src="https://github.com/user-attachments/assets/b3f1cdac-04da-4711-9c75-5d126c72fabc" />
+
 
 Recall, despite connected via a relay, pinging the edge PC from kali will still fail. Everything needs to be done from the relay.
 
-![image.png](attachment:9c875f37-a1a3-4c52-9086-f9117bb231b8:image.png)
+<img width="1326" height="852" alt="image" src="https://github.com/user-attachments/assets/6c104fc4-b93b-4157-96fb-0abb667cbf7a" />
+
 
 1. **Internal Subnet Scanning**
 - Performed a broad TCP connect scan across `10.1.16.0/24` to enumerate additional hosts and services.
@@ -98,9 +102,11 @@ We can now scan for other systems within the internal subnet using `nmap -sT -Pn
 
 Performing an nmap scan and sshuttle is capturing it and this confirms that we have effectively connected to the edge and can enumerate other nodes alongside the services they are running.
 
-![image.png](attachment:947b976e-9580-4342-b439-c351b842bc18:image.png)
+<img width="852" height="321" alt="image" src="https://github.com/user-attachments/assets/2639e5e5-cf83-4f08-8957-98500478cb16" />
 
-![image.png](attachment:245684a9-e844-45da-a34d-4c4d40c7cdc9:image.png)
+
+<img width="852" height="372" alt="image" src="https://github.com/user-attachments/assets/121d5b6f-5cef-4bcf-ab5c-f3a2e3fe38dc" />
+
 
 ## Findings
 
